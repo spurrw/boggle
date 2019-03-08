@@ -1,0 +1,83 @@
+Project 3 Design
+William Spurr
+
+------ Messages Examples ------
+Messages are designed with the idea that clients are 'dumb' and the server is
+'smart.' The server will handle the formatting of text strings, all the clients
+have to do in most cases is print the text the server gives them. Clients
+will also have to translate the meaning of message types, which give
+information about what is happening in the game. This is described
+below.
+
+Messages will use the usernames Trinity and Neo.
+
+--- Client to Server	--- 
+
+1. Client tryint to join the server.
+join_request?!!?Trinity---=
+join_request?!!?Neo---=
+
+2. Client guesses words.
+guess?!!?Trinity?!!?Neo?!!?thisisawordguess?!!?
+guess?!!?Neo?!!?thisisawordguess?!!?
+
+3. Client says goodbye.
+goodbye?!!?Trinity?!!?Goodbye, server. Love, Trinity. <3?!!?
+goodbye?!!?Neo?!!?Goodbye, server. Love, Neo. <3?!!?
+
+--- Server to Client ---
+
+1. New client joined. Sent to connecting client.
+join_accepted?!!?Trinity?!!?Welcome to the game, Trinity. Waiting for others to join.?!!?
+join_accepted?!!?Neo?!!?Welcome to the game, Neo. Waiting for others to join.?!!?
+
+2. New client tried to join, but game is full. Sent to connecting client.
+join_rejected---Trinity?!!?Sorry Trinity, the game is full already.?!!?
+join_rejected?!!?Neo?!!?Sorry Neo, the game is full already.?!!?
+
+3. New client tried to join, but game is already started. Sent to connecting client.
+join_rejected?!!?Trinity?!!?Sorry Trinity, the game is already running. Please try again later.?!!?
+join_rejected?!!?Neo?!!?Sorry Neo, the game is already running. Please try again later.?!!?
+
+4. Game should start, but not enough clients connected. Sent to all clients.
+game_terminated?!!?Trinity?!!?Sorry Trinity, but not enough players connected.?!!?
+game_terminated?!!?Neo?!!?Sorry Neo, but not enough players connected.?!!?
+
+5. Game about to begin. Sent to all clients.
+game_queued?!!?Trinity?!!?Trinity and Neo have joined the game. The game is about to begin.?!!?
+game_queued?!!?Neo?!!?Trinity and Neo have joined the game. The game is about to begin.?!!?
+
+6. Game beginning. This is how a boggle board is sent. Sent to all clients.
+game_starting?!!?Trinity?!!?E T S M\nA S A P\nW Z D E\nU W QuV\n\nStart entering words!?!!?
+game_starting?!!?Neo?!!?E T S M\nA S A P\nW Z D E\nU W QuV\n\nStart entering words!?!!?
+
+7. Game over. Tabulating results. Sent to all clients.
+game_over?!!?Trinity?!!?The game has ended. Server is tabulating results.?!!?
+game_over?!!?Neo?!!?The game has ended. Server is tabulating results.?!!?
+
+8. Final results. Sent to each client. Sent to all clients.
+game_terminated?!!?Trinity?!!?Neo unique words: paste, mad, sad\nTrinity unique words: pasta, 
+	pastas, mast, saw, was\nNeo points: 4\nTrinity points: 7\nTrinity wins!?!!?
+game_terminated?!!?Neo?!!?Neo unique words: paste, mad, sad\nTrinity unique words: pasta, 
+	pastas, mast, saw, was\nNeo points: 4\nTrinity points: 7\nTrinity wins!?!!?
+
+------ Message Formatting ------
+
+	Message formatting is done using a sentinel value (?!!?) to seperate message
+sections. A header describing information about the game state and what the
+message is for is given before a string of text to probably be printed on the
+client's screen.
+
+	A message format is given below:
+
+<message type>?!!?<username to/from>?!!?<"description string">?!!?
+
+message type = text code telling the clients and servers what to do with the
+	message
+
+username to/from = username a client is using or username the server is trying
+	to communicate with
+
+description string = any other text accompanying the message ex: boggle board,
+	joining message to print, game results to print
+
